@@ -73,9 +73,9 @@ X = np.array([[0, 0], [0, 1], [1, 0], [1, 1]])
 y = np.array([[0], [1], [1], [0]])
 
 # Parametry uczenia
-learning_rate = 0.2
-epochs = 1000
-hidden_layer_size = 3
+learning_rate = 0.3
+epochs = 2000
+hidden_layer_size = 2
 
 # Uczenie sieci neuronowej
 W1, b1, W2, b2, errors_mse, errors_classification, weights_history, error_mse_hidden = train(X, y, hidden_layer_size, learning_rate, epochs)

@@ -3,6 +3,72 @@ import os
 os.chdir("C:/Users/jakub/Visual Studio Code/Personal Projects/python")
 
 #"""
+#110. Funkcje generujące - słowo kluczowe yield
+def generate_inf_numbers():
+    number = 0
+    while True:
+        number = number + 1
+        yield number*number
+
+generatedNumbers = []
+
+numberGenerated = generate_inf_numbers()
+
+for k in range(20):
+    generatedNumbers.append(next(numberGenerated))
+
+print(generatedNumbers)
+
+for k in range(30):
+    generatedNumbers.append(next(numberGenerated))
+
+print(generatedNumbers)
+#"""
+
+
+
+
+
+
+"""
+#110. Funkcje generujące - słowo kluczowe yield
+def generate_even_numbers():
+    print("start")
+    for element in range(400):
+        print("przed yield")
+        if(element % 2 == 0):
+            yield element
+            print("po yeild")
+
+evenNumbersGenerator = (element
+                        for element in range(400)
+                        if (element % 2 == 0)
+                        )
+
+a = generate_even_numbers()
+
+def generate_10_numbers():
+    x = 0
+    while x < 10:
+        yield x
+        x = x + 1
+
+print(list(generate_10_numbers()))
+
+generate_10_numbers_expression = (x
+                                  for x in range(10))
+
+print(list(generate_10_numbers_expression))
+print(list(generate_10_numbers_expression))
+"""
+
+
+
+
+
+
+
+"""
 #106. ĆWICZENIE: System zarządzania ulubionymi kotkami - wstęp do ćwiczenia
 #107. Dodawanie kotow do ulubionych'
 #108. Usuwanie kotow z ulubionych
@@ -108,7 +174,7 @@ if __name__ == "__main__":
     deleteCat = input("Czy chcesz usunac kota z ulubionych? T/N\n")
 
     decision_delete(deleteCat)
-#"""
+"""
 
 
 
