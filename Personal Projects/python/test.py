@@ -13,16 +13,17 @@ def generate_inf_numbers():
 generatedNumbers = []
 
 numberGenerated = generate_inf_numbers()
-
-for k in range(20):
+"""
+for _ in range(20):
     generatedNumbers.append(next(numberGenerated))
 
 print(generatedNumbers)
 
-for k in range(30):
+for _ in range(30):
     generatedNumbers.append(next(numberGenerated))
 
 print(generatedNumbers)
+"""
 #"""
 
 
@@ -56,7 +57,7 @@ def generate_10_numbers():
 print(list(generate_10_numbers()))
 
 generate_10_numbers_expression = (x
-                                for x in range(10))
+                                  for x in range(10))
 
 print(list(generate_10_numbers_expression))
 print(list(generate_10_numbers_expression))
