@@ -74,7 +74,7 @@ y = np.array([[0], [1], [1], [0]])
 
 # Parametry uczenia
 learning_rate = 0.3
-epochs = 2000
+epochs = 1000
 hidden_layer_size = 2
 
 # Uczenie sieci neuronowej
