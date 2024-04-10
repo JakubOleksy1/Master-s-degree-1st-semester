@@ -56,7 +56,7 @@ def generate_10_numbers():
 print(list(generate_10_numbers()))
 
 generate_10_numbers_expression = (x
-                                  for x in range(10))
+                                for x in range(10))
 
 print(list(generate_10_numbers_expression))
 print(list(generate_10_numbers_expression))
