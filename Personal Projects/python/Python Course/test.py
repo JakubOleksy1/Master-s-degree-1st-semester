@@ -3,6 +3,20 @@ import os
 os.chdir("C:/Users/jakub/Visual Studio Code/Personal Projects/python")
 
 #"""
+#133. ĆWICZENIE: Stwórz rakiety poruszające się do góry - bazujemy na tym ćwiczeniu
+
+#stworz klase ktora reprezentuje rakiete i bd mogla sc do gory o 1 jednostke 
+#stworz 5 rakiet o startowej wysokosci 0 
+#wylosuj rakiete i porusz ja o 1 jednostke do gory zrob to np 10 razy
+#wypisz wszystkie wysokosci rakiet
+#"""
+
+
+
+
+
+
+"""
 #110. Funkcje generujące - słowo kluczowe yield
 def generate_inf_numbers():
     number = 0
@@ -13,7 +27,7 @@ def generate_inf_numbers():
 generatedNumbers = []
 
 numberGenerated = generate_inf_numbers()
-"""
+
 for _ in range(20):
     generatedNumbers.append(next(numberGenerated))
 
@@ -23,8 +37,8 @@ for _ in range(30):
     generatedNumbers.append(next(numberGenerated))
 
 print(generatedNumbers)
+
 """
-#"""
 
 
 
