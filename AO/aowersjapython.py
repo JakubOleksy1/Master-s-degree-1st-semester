@@ -78,4 +78,4 @@ plt.title('Wykres zmian makespan w zależności od temperatury')
 plt.show()
 
 #sprawko opis teoretyczny funckje opisac co robia i wykresy 
-#str encyklopedia algorytmow
+#str encyklopedia algorytmow 
