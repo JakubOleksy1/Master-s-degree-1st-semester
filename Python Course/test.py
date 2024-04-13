@@ -9,13 +9,6 @@ os.chdir("C:/Users/jakub/Visual Studio Code/Personal Projects/python")
 #stworz 5 rakiet o startowej wysokosci 0 
 #wylosuj rakiete i porusz ja o 1 jednostke do gory zrob to np 10 razy
 #wypisz wszystkie wysokosci rakiet
-import random
-import rocket
-
-
-
-
-
 #"""
 
 
