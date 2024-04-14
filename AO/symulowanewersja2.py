@@ -71,7 +71,7 @@ def symulowane_wyzarzanie_rpq(tasks, temperatura_poczatkowa, wspolczynnik_chlodz
 temperatura_poczatkowa = 1000
 wspolczynnik_chlodzenia = 0.95
 liczba_prob = 1
-max_epoki = 10000 
+max_epoki = 10000
 
 #Uruchomienie algorytmu
 filepath = "rpq_500.txt"  # Zmień na aktualną ścieżkę do pliku
