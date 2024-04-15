@@ -5,7 +5,7 @@ rocket2 = Rocket()
 
 print(RocketBoard.get_distance(rocket1, rocket2))
 """
-board = RocketBoard(11)
+board = RocketBoard(10)
 print(len(board))
 
 print(f"Next rocket id will be {Rocket.nextId}")
