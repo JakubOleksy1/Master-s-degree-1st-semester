@@ -64,7 +64,7 @@ class NaiveBayesClassifier:
 # Sample dataset (replace with your actual dataset)
 X = np.array([
     [1, 1, 0, 0],
-    [0, 1, 1, 0],
+    [1, 1, 1, 0],
     [1, 0, 0, 1],
     [0, 0, 1, 1],
     [1, 1, 1, 1]
