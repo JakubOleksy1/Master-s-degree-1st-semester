@@ -40,11 +40,11 @@ class NaiveBayes:                               # Klasa NaiveBayes
 
     def _pdf(self, class_idx, x):                           # Obliczenie funkcji gestosci prawdopodobienstwa
         mean = self._mean[class_idx]                        # Srednia
-        var = self._var[class_idx]                          # Wariancja
+        var = self._var[class_idx] + 1e-9                   # Wariancja !!!!!!!!!!!!!!!!!!!!!!!
         numerator = np.exp(-((x - mean) ** 2) / (2 * var))  # Licznik
         denominator = np.sqrt(2 * np.pi * var)              # Mianownik
-        return numerator / denominator                      # Wynik
-    
+        return (numerator / denominator) + 1e-9             # Wynik !!!!!!!!!!!!!!!!!!!!!!!!
+
 if __name__ == "__main__":                                      # Głowna funkcja programu
 
     df = pd.read_csv('heartdisease.csv')                        # Odczyt danych z pliku CSV
@@ -61,7 +61,7 @@ if __name__ == "__main__":                                      # Głowna funkcj
     X = df.drop(['num'] + to_drop, axis=1).values                   # Wybranie zmiennych niezaleznych odrzucajac te o korelacji mniejszej niż mediana
     y = df['num'].values                                            # Wybranie zmiennej zaleznej 'num'
 
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=123)  # Podzial danych na zbior treningowy i testowy
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100)  # Podzial danych na zbior treningowy i testowy
 
     nb = NaiveBayes()                                   # Utworzenie obiektu klasy NaiveBayes
     nb.fit(X_train, y_train)                            # Dopasowanie modelu do danych treningowych
@@ -69,16 +69,31 @@ if __name__ == "__main__":                                      # Głowna funkcj
 
     prob_positive = probabilities[:, 1]                 # Prawdopodobienstwa przynależnosci do klasy pozytywnej
 
+    squared_errors = []
+    
+    for i in range(1, len(X_train)):
+        nb = NaiveBayes()
+        nb.fit(X_train[:i], y_train[:i])
+        probabilities = nb.predict_proba(X_test)
+        
+        # Skip this iteration if the model predicts only one class
+        if probabilities.shape[1] == 1:
+            continue
+
+        prob_positive = probabilities[:, 1]
+        squared_error = np.mean((prob_positive - y_test) ** 2)
+        squared_errors.append(squared_error)
+
     plt.figure(figsize=(15,5))                              # Wykresy
 
     plt.subplot(1,3,1)
-    plt.hist(prob_positive, bins=10, edgecolor='k')         # Histogram prawdopodobienstw przynaleznosci do klasy pozytywnej
+    plt.hist(prob_positive, bins=10, edgecolor='k', density=True)         # Histogram prawdopodobienstw przynaleznosci do klasy pozytywnej
     plt.title('Histogram of predicted probabilities')
     plt.xlabel('Predicted probability of heart disease')
     plt.ylabel('Frequency')
 
     plt.subplot(1,3,2)
-    plt.hist(prob_positive, bins=10, edgecolor='k', cumulative=True)    # Dystrybuanta prawdopodobienstw przynaleznosci do klasy pozytywnej
+    plt.hist(prob_positive, bins=10, edgecolor='k', cumulative=True, density=True)    # Dystrybuanta prawdopodobienstw przynaleznosci do klasy pozytywnej
     plt.title('Cumulative distribution of predicted probabilities')
     plt.xlabel('Predicted probability of heart disease')
     plt.ylabel('Cumulative frequency')
@@ -90,4 +105,11 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.ylabel('Predicted probability of heart disease')
 
     plt.tight_layout()
+    plt.show()
+
+
+    plt.plot(squared_errors)
+    plt.title('Squared error by number of training samples')
+    plt.xlabel('Number of training samples')
+    plt.ylabel('Squared error')
     plt.show()
