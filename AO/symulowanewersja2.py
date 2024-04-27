@@ -98,3 +98,37 @@ plt.title('Wykres zmian makespan w zależności od temperatury')
 plt.show()
 #sprawko opis teoretyczny funckje opisac co robia i wykresy 
 #str encyklopedia algorytmow
+
+from ortools.sat.python import cp_model
+
+def solve_rqp(tasks):
+    model = cp_model.CpModel()
+
+#Zmienne: punkty startowe dla każdego zadania
+    starts = [model.NewIntVar(0, sum(task[1] for task in tasks), f'start{i}') for i in range(len(tasks))]
+    # Zmienne pomocnicze: czasy zakończenia każdego zadania
+    ends = [model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), f'end_{i}') for i in range(len(tasks))]
+
+#Czas zakończenia wszystkich zadań
+    makespan = model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), 'makespan')
+
+#Dodanie ograniczeń związanych z r, p, q dla każdego zadania
+    for i, (r, p, q) in enumerate(tasks):
+        model.Add(starts[i] >= r)  # Nie można zacząć przed 'r'
+        model.Add(ends[i] == starts[i] + p)  # Czas zakończenia to czas startu plus czas przetwarzania
+        model.Add(ends[i] + q <= makespan)  # 'q' jest deadlinem od zakończenia zadania do maksymalnego makespanu
+
+#Minimalizacja makespanu
+    model.Minimize(makespan)
+
+#Rozwiązanie problemu
+    solver = cp_model.CpSolver()
+    status = solver.Solve(model)
+
+    if status == cp_model.OPTIMAL:
+        print(f'Optimal Makespan: {solver.Value(makespan)}')
+        for i in range(len(tasks)):
+            print(f'Task {i}: Start at {solver.Value(starts[i])}, End by {solver.Value(ends[i])}')
+    else:
+        print("Nie znaleziono rozwiązania!")
+solve_rqp(tasks)
