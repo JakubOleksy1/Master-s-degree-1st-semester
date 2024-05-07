@@ -1,8 +1,131 @@
 public class App {
-    
+    public static void main(String[] args) {
+        String[] words = new String[3];
+        words[0] = "Hello";
+        words[1] = "to";
+        words[2] = "you";
+
+        System.out.println(words[2]);
+
+        String[] fruits = {"apple", "banana", "pear", "kiwi"};
+
+        for(String fruit: fruits) {
+            System.out.println(fruit);
+        }
+
+        int value = 0;
+        String text = null;
+        System.out.println(text);
+        
+        String[] texts = new String[2];
+        System.out.println(texts[value]);
+
+        texts[0] = "one";
+    }
 }
 
-/*TUTORIAL 6
+/*TUTORIAL 14 
+public class App {
+    public static void main(String[] args) {
+
+        int value = 0;
+        int[] values;
+        values = new int[3];
+        System.out.println(values[0]);
+
+        values[0] = 10;
+        values[1] = 20;
+        values[2] = 30;
+
+        System.out.println(values[0]);
+        System.out.println(values[1]);
+        System.out.println(values[2]);
+
+        for(int i = 0; i < values.length; i++) {
+            System.out.println(values[i]);
+        }
+
+        int[] numbers = {5, 6, 7};
+
+        for(int i = 0; i < numbers.length; i++) {
+            System.out.println(numbers[i]);
+        }
+    }
+}*/
+
+/* TUTORIAL 13
+import java.util.Scanner;
+
+public class App {
+    public static void main(String[] args) {
+        
+        Scanner input = new Scanner(System.in);
+
+        System.out.println("Enter a command: ");
+        String text = input.nextLine();
+        input.close();
+        switch (text) {
+            case "start":
+                System.out.println("Machine started!");
+                break;
+            
+                case "stop":
+                System.out.println("Machine stopped!");
+                break;
+            
+                default:
+                System.out.println("Command not recognized!");
+                break;
+        }
+    }
+}*/
+
+/*TUTORIAL 12
+import java.util.Scanner;
+public class App {
+    public static void main(String[] args) {
+        
+        Scanner scanner = new Scanner(System.in);
+
+        /*System.out.println("Enter a number: ");
+
+        int value = scanner.nextInt();
+        while(value != 5) {
+            System.out.println("Enter a number: ");
+            value = scanner.nextInt();
+        }
+        int value = 0;
+        do {
+            System.out.println("Enter a number: ");
+            value = scanner.nextInt();
+        } while(value != 5);
+
+        System.out.println("You got 5!");
+        scanner.close();
+    }
+}*/
+
+/*TUTORIAL 11
+import java.util.Scanner;
+
+public class App {
+    public static void main(String[] args) {
+        
+        // Create scanner object
+        Scanner input = new Scanner(System.in);
+        
+        // Output the prompt
+        System.out.println("Enter an intiger: ");
+        
+        // Wait for the user to enter a line of text
+        int value = input.nextInt();
+
+        // Tell them what they entered
+        System.out.println("You entered: " + value);
+    }
+}*/
+
+/*TUTORIAL 6 7 8 9 10
 public class App {
     public static void main(String[] args) {
         int loop = 0;
