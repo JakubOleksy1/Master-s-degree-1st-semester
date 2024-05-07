@@ -7,8 +7,8 @@ __author__ = "irfantitok@gmail.com"
 import numpy as np
 
 def calc_settling_time(
-    y: list(), 
-    t: list(),
+    y: list(), # type: ignore
+    t: list(), # type: ignore
     settling_time_threshold = 0.02) -> float:
     steady_state_val = y[-1]
     upper_margin = (1.0 + settling_time_threshold) * steady_state_val
@@ -22,8 +22,8 @@ def calc_settling_time(
     return settling_time 
 
 def calc_rise_time(
-    y: list(),
-    t: list(),
+    y: list(), # type: ignore
+    t: list(), # type: ignore
     rise_time_lower_val_bound = 0.1,
     rise_time_upper_val_bound = 0.9) -> float:
     steady_state_val = y[-1]
@@ -35,7 +35,7 @@ def calc_rise_time(
 
     return rise_time
 
-def calc_overshoot_percent(y: list()) -> float:
+def calc_overshoot_percent(y: list()) -> float: # type: ignore
     steady_state_val = y[-1]
     overshoot_val = max(y) / steady_state_val - 1
     overshoot_percent = overshoot_val * 100
