@@ -1,3 +1,195 @@
+/* TUTORIAL 21
+class Cat {
+    private String name;
+    private int age;
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setAge(int age) {
+        if(age > 0) {
+            this.age = age;
+        } else {
+            System.out.println("Age must be greater than 0");
+        }
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int getAge() {
+        return age;
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        Cat cloey = new Cat();
+        // frog1.name = "Bertie";
+        // frog1.age = 1;
+        cloey.setName("Cloey");
+        cloey.setAge(1);
+
+        System.out.println(cloey.getName());
+        System.out.println(cloey.getAge());
+    }
+}*/
+
+/* TUTORIAL 20 
+class Robot {
+    public static void main(String[] args) {
+        System.out.println("Hel;o");
+    }
+    
+    public void speak(String text) {
+        System.out.println(text);
+    }
+
+    public void jump(int height) {
+        System.out.println("Jumping: " + height);
+    }
+
+    public void move(String direction, double distance) {
+        System.out.println("Moving " + distance + " meters in direction " + direction);
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        Robot robot = new Robot();
+        robot.speak("HI I am a robot.");
+        robot.jump(7);
+        robot.move("West", 12.2);
+        
+        String greeting = "Hello there!";
+        robot.speak(greeting);
+
+        int value = 14;
+        robot.jump(value);
+    }
+}*/
+
+/* TUTORIAL 19
+class Person {
+    String name;
+    int age;
+
+    void speak() {
+        System.out.println("My name is: " + name + " and I am " + age + " years old.");
+    }
+
+    int calculateYearsToRetirement() {
+        int yearsLeft = 65 - age;
+        System.out.println(yearsLeft);
+
+        return yearsLeft;
+    }
+
+    int getAge() {
+        return age;
+    }
+
+    String getName() {
+        return name;
+    }
+}
+
+public class App { 
+    public static void main(String[] args) {
+        Person person1 = new Person();
+        
+        person1.name = "Joe ";
+        person1.age = 25;
+        
+        // person1.speak();
+
+        int years = person1.calculateYearsToRetirement();
+
+        System.out.println("Years until retirement: " + years);
+    
+        int age = person1.getAge();
+        System.out.println("Age is: " + age);
+
+        String name = person1.getName();
+        System.out.println("Name is: " + name);
+    }
+}*/
+
+/*TUTORIAL 17 & 18
+class Person {
+    String name;
+    int age;
+
+    void speak() {
+        for(int i = 0; i < 3; i++) {
+            System.out.println("My name is: " + name + " and I am " + age + " years old.");
+        }
+    }
+
+    void sayHello() {
+        System.out.println("Hello there!");
+    }
+}
+
+public class App { 
+    public static void main(String[] args) {
+        Person person1 = new Person();
+        person1.name = "Joe Bloggs";
+        person1.age = 37;
+        person1.speak();
+        person1.sayHello();
+
+        Person person2 = new Person();
+        person2.name = "Sarah Smith";
+        person2.age = 20;
+        person2.speak();
+        person2.sayHello();
+
+        System.out.println(person1.name);
+    }
+}*/
+
+/*TUTORIAL 16
+public class App {
+    public static void main(String[] args) {
+        int[] values = {3, 5, 2343};
+        System.out.println(values[2]);
+
+        int[][] grid = {
+            {3, 5, 2343},
+            {2, 4},
+            {1, 2, 3, 4}
+        };
+
+        System.out.println(grid[1][1]);
+        System.out.println(grid[0][2]);
+        
+        String[][] texts = new String[2][3];
+        texts[0][1] = "Hello there";
+
+        System.out.println(texts[0][1]);
+
+        for(int row = 0; row < grid.length; row++) {
+            for(int col = 0; col < grid[row].length; col++) {
+                System.out.print(grid[row][col] + "\t");
+            }
+            System.out.println();
+        }
+
+        String[][] words = new String[2][];
+
+        System.out.println(words[0]);
+
+        words[0] = new String[3];
+
+        words[0][1] = "Hi there!";
+        System.out.println(words[0][1]);
+    }
+}*/
+
+/*TUTORIAL 15
 public class App {
     public static void main(String[] args) {
         String[] words = new String[3];
@@ -22,7 +214,7 @@ public class App {
 
         texts[0] = "one";
     }
-}
+}*/
 
 /*TUTORIAL 14 
 public class App {

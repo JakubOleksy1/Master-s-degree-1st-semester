@@ -36,7 +36,7 @@ class PIDController:
         self.Kd = Kd
         # self.prev_u = y #tylko jak controller cos zwroci 
 
-    def update_controller(self, current_error):
+    def update_controller(self, current_error) -> float:
         # Obliczenie sterowania na podstawie bledu regulacji
         u = self.prev_u + self.Kp * (current_error - self.prev_error) + self.Ki * current_error + self.Kd * (current_error - 2 * self.prev_error + self.prev_prev_error)
 
