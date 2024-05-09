@@ -43,8 +43,7 @@ class PIDController:
         # Update bledow regulacji
         self.prev_prev_error = self.prev_error
         self.prev_error = current_error
-        self.prev_u = u # Tu bedzie inaczej self.prev_u = y olafa do tego trzeba wrzucic w funckcje update_coefficients
-
+        self.prev_u = u 
         return u
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////
