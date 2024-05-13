@@ -7,6 +7,19 @@ from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder                 # Uzyj tylko jesli dane zawieraja zmienne kategorialne
 import matplotlib.pyplot as plt
 
+from sklearn.svm import SVC
+from sklearn.ensemble import RandomForestClassifier
+
+class SupportVectorMachine:
+    def __init__(self, kernel='rbf', probability=True):
+        self._model = SVC(kernel=kernel, probability=probability)
+
+    def fit(self, X, y):
+        self._model.fit(X, y)
+
+    def predict_proba(self, X):
+        return self._model.predict_proba(X)
+
 class NaiveBayes:                               # Klasa NaiveBayes
     def fit(self, X, y):                        # Dopasowanie modelu do danych
         n_samples, n_features = X.shape         # Liczba probek i zmiennych
@@ -107,9 +120,104 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.tight_layout()
     plt.show()
 
-
     plt.plot(squared_errors)
     plt.title('Squared error by number of training samples')
     plt.xlabel('Number of training samples')
     plt.ylabel('Squared error')
     plt.show()
+
+    """svm = SupportVectorMachine()
+    svm.fit(X_train, y_train)
+    probabilities = svm.predict_proba(X_test)
+    prob_positive = probabilities[:, 1]
+
+    # Calculate the squared errors for different numbers of training samples
+    squared_errors = []
+    for i in range(5, len(X_train)):  # Start from 50 instead of 1
+        svm = SupportVectorMachine()
+        svm.fit(X_train[:i], y_train[:i])
+        probabilities = svm.predict_proba(X_test)
+        if probabilities.shape[1] == 1:
+            continue
+        prob_positive = probabilities[:, 1]
+        squared_error = np.mean((prob_positive - y_test) ** 2)
+        squared_errors.append(squared_error)
+
+    # Plot the histograms and the cumulative distribution
+    plt.subplot(1,3,1)
+    plt.hist(prob_positive, bins=10, edgecolor='k', density=True)
+    plt.title('Histogram of predicted probabilities')
+    plt.xlabel('Predicted probability of heart disease')
+    plt.ylabel('Frequency')
+
+    plt.subplot(1,3,2)
+    plt.hist(prob_positive, bins=10, edgecolor='k', cumulative=True, density=True)
+    plt.title('Cumulative distribution of predicted probabilities')
+    plt.xlabel('Predicted probability of heart disease')
+    plt.ylabel('Cumulative frequency')
+
+    plt.subplot(1,3,3)
+    plt.plot(np.sort(prob_positive))
+    plt.title('Probability by iterations')
+    plt.xlabel('Iteration')
+    plt.ylabel('Predicted probability of heart disease')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Plot the squared errors
+    plt.plot(squared_errors)
+    plt.title('Squared error by number of training samples')
+    plt.xlabel('Number of training samples')
+    plt.ylabel('Squared error')
+    plt.show()"""
+
+    """rf = RandomForestClassifier()  # Create an instance of the RandomForestClassifier class
+    rf.fit(X_train, y_train)  # Train the random forest
+    probabilities = rf.predict_proba(X_test)  # Get the predicted probabilities
+
+    prob_positive = probabilities[:, 1]  # Probabilities of the positive class
+
+    squared_errors = []
+
+    for i in range(5, len(X_train)):  # Start from 50 to ensure at least two classes
+        rf = RandomForestClassifier()
+        rf.fit(X_train[:i], y_train[:i])
+        probabilities = rf.predict_proba(X_test)
+
+        # Skip this iteration if the model predicts only one class
+        if probabilities.shape[1] == 1:
+            continue
+
+        prob_positive = probabilities[:, 1]
+        squared_error = np.mean((prob_positive - y_test) ** 2)
+        squared_errors.append(squared_error)
+
+        # Plot the histograms and the cumulative distribution
+    plt.subplot(1,3,1)
+    plt.hist(prob_positive, bins=10, edgecolor='k', density=True)
+    plt.title('Histogram of predicted probabilities')
+    plt.xlabel('Predicted probability of heart disease')
+    plt.ylabel('Frequency')
+
+    plt.subplot(1,3,2)
+    plt.hist(prob_positive, bins=10, edgecolor='k', cumulative=True, density=True)
+    plt.title('Cumulative distribution of predicted probabilities')
+    plt.xlabel('Predicted probability of heart disease')
+    plt.ylabel('Cumulative frequency')
+
+    plt.subplot(1,3,3)
+    plt.plot(np.sort(prob_positive))
+    plt.title('Probability by iterations')
+    plt.xlabel('Iteration')
+    plt.ylabel('Predicted probability of heart disease')
+
+    plt.tight_layout()
+    plt.show()
+
+    # Plot the squared errors
+    plt.plot(squared_errors)
+    plt.title('Squared error by number of training samples')
+    plt.xlabel('Number of training samples')
+    plt.ylabel('Squared error')
+    plt.show()"""
