@@ -61,7 +61,11 @@ class NaiveBayes:                               # Klasa NaiveBayes
 if __name__ == "__main__":                                      # Głowna funkcja programu
 
     df = pd.read_csv('heartdisease.csv')                        # Odczyt danych z pliku CSV
-
+    
+    df['num'] = (df['num'] / 4) * 100
+    
+    errVar = 5
+    
     """le = LabelEncoder()                                      # Zamiana wartosci kategorialnych na liczbowe np. 'yes' -> 1, 'no' -> 0          
     df['num'] = le.fit_transform(df['num'])                     # Zamiana wartosci kategorialnych na liczbowe w tabeli 'num'"""
 
@@ -74,6 +78,8 @@ if __name__ == "__main__":                                      # Głowna funkcj
     X = df.drop(['num'] + to_drop, axis=1).values                   # Wybranie zmiennych niezaleznych odrzucajac te o korelacji mniejszej niż mediana
     y = df['num'].values                                            # Wybranie zmiennej zaleznej 'num'
 
+    max_value_df = df['num'].max()
+    print("Max value of probability", max_value_df)
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100)  # Podzial danych na zbior treningowy i testowy
 
     nb = NaiveBayes()                                   # Utworzenie obiektu klasy NaiveBayes
@@ -82,9 +88,9 @@ if __name__ == "__main__":                                      # Głowna funkcj
 
     prob_positive = probabilities[:, 1]                 # Prawdopodobienstwa przynależnosci do klasy pozytywnej
 
-    squared_errors = []
+    squared_errors_nb = []
     
-    for i in range(1, len(X_train)):
+    for i in range(errVar, len(X_train)):
         nb = NaiveBayes()
         nb.fit(X_train[:i], y_train[:i])
         probabilities = nb.predict_proba(X_test)
@@ -94,8 +100,8 @@ if __name__ == "__main__":                                      # Głowna funkcj
             continue
 
         prob_positive = probabilities[:, 1]
-        squared_error = np.mean((prob_positive - y_test) ** 2)
-        squared_errors.append(squared_error)
+        squared_error = np.mean((prob_positive - y_test/100) ** 2)
+        squared_errors_nb.append(squared_error)
 
     plt.figure(figsize=(15,5))                              # Wykresy
 
@@ -120,28 +126,22 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.tight_layout()
     plt.show()
 
-    plt.plot(squared_errors)
-    plt.title('Squared error by number of training samples')
-    plt.xlabel('Number of training samples')
-    plt.ylabel('Squared error')
-    plt.show()
-
-    """svm = SupportVectorMachine()
+    svm = SupportVectorMachine()
     svm.fit(X_train, y_train)
     probabilities = svm.predict_proba(X_test)
     prob_positive = probabilities[:, 1]
 
     # Calculate the squared errors for different numbers of training samples
-    squared_errors = []
-    for i in range(5, len(X_train)):  # Start from 50 instead of 1
+    squared_errors_svm = []
+    for i in range(errVar, len(X_train)):  # Start from 50 instead of 1
         svm = SupportVectorMachine()
         svm.fit(X_train[:i], y_train[:i])
         probabilities = svm.predict_proba(X_test)
         if probabilities.shape[1] == 1:
             continue
         prob_positive = probabilities[:, 1]
-        squared_error = np.mean((prob_positive - y_test) ** 2)
-        squared_errors.append(squared_error)
+        squared_error = np.mean((prob_positive - y_test/100) ** 2)
+        squared_errors_svm.append(squared_error)
 
     # Plot the histograms and the cumulative distribution
     plt.subplot(1,3,1)
@@ -165,22 +165,15 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.tight_layout()
     plt.show()
 
-    # Plot the squared errors
-    plt.plot(squared_errors)
-    plt.title('Squared error by number of training samples')
-    plt.xlabel('Number of training samples')
-    plt.ylabel('Squared error')
-    plt.show()"""
-
-    """rf = RandomForestClassifier()  # Create an instance of the RandomForestClassifier class
+    rf = RandomForestClassifier()  # Create an instance of the RandomForestClassifier class
     rf.fit(X_train, y_train)  # Train the random forest
     probabilities = rf.predict_proba(X_test)  # Get the predicted probabilities
 
     prob_positive = probabilities[:, 1]  # Probabilities of the positive class
 
-    squared_errors = []
+    squared_errors_rf = []
 
-    for i in range(5, len(X_train)):  # Start from 50 to ensure at least two classes
+    for i in range(errVar, len(X_train)):  # Start from 50 to ensure at least two classes
         rf = RandomForestClassifier()
         rf.fit(X_train[:i], y_train[:i])
         probabilities = rf.predict_proba(X_test)
@@ -190,10 +183,10 @@ if __name__ == "__main__":                                      # Głowna funkcj
             continue
 
         prob_positive = probabilities[:, 1]
-        squared_error = np.mean((prob_positive - y_test) ** 2)
-        squared_errors.append(squared_error)
+        squared_error = np.mean((prob_positive - y_test/100) ** 2)
+        squared_errors_rf.append(squared_error)
 
-        # Plot the histograms and the cumulative distribution
+    # Plot the histograms and the cumulative distribution
     plt.subplot(1,3,1)
     plt.hist(prob_positive, bins=10, edgecolor='k', density=True)
     plt.title('Histogram of predicted probabilities')
@@ -215,9 +208,19 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.tight_layout()
     plt.show()
 
-    # Plot the squared errors
-    plt.plot(squared_errors)
+    plt.plot(squared_errors_nb)
     plt.title('Squared error by number of training samples')
     plt.xlabel('Number of training samples')
     plt.ylabel('Squared error')
-    plt.show()"""
+
+    # Plot the squared errors
+    plt.plot(squared_errors_svm)
+    plt.title('Squared error by number of training samples')
+    plt.xlabel('Number of training samples')
+    plt.ylabel('Squared error')
+
+    plt.plot(squared_errors_rf)
+    plt.title('Squared error by number of training samples')
+    plt.xlabel('Number of training samples')
+    plt.ylabel('Squared error')
+    plt.show()
