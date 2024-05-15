@@ -1,3 +1,63 @@
+import ocean.Fish;
+import ocean.plants.Algae;
+import ocean.plants.Seaweed;
+
+public class App {
+    public static void main(String[] args) {
+        
+        Fish fish = new Fish();
+        Seaweed weed = new Seaweed();
+        Algae algae = new Algae();
+    }
+}
+
+/* TUTORIAL 26
+public class App {
+    public static void main(String[] args) {
+        Machine mach1 = new Machine();
+        mach1.start();
+        mach1.stop();
+
+        Car car1 = new Car();
+        car1.start();
+        car1.wipeWindShield();
+        car1.showInfo();
+        car1.stop();
+    }
+}LOOK FOR CAR.JAVA AND MACHINE.JAVA*/
+
+/* TUTORIAL 25
+class Frog {
+
+    private int id;
+    private String name;
+
+    public Frog(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public String toString() {
+
+        return String.format("%-4d: %s", id, name);
+        /*StringBuilder sb = new StringBuilder();
+        sb.append(id).append(": ").append(name);
+        return sb.toString();
+    }
+    
+}
+
+public class App {
+    public static void main(String[] args) {
+        Frog frog1 = new Frog(7, "BOB");
+        Frog frog2 = new Frog(5, "SUE");
+
+        System.out.println(frog1);
+        System.out.println(frog2);
+    }
+}*/
+
+/* TUTORIAL 24
 public class App {
     public static void main(String[] args) {
         String info = "";
@@ -37,7 +97,7 @@ public class App {
     
         System.out.printf("Total value: %10.1f\n", 343.23423);
     }
-}
+}*/
 
 /* TUTORIAL 23 
 class Thing {
