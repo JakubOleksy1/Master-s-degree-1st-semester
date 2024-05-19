@@ -1,18 +1,15 @@
-    svm.fit(X_train, y_train)
-    probabilities = svm.predict_proba(X_test)
-    prob_positive = probabilities[:, 1]
+for i in range(errVar, len(X_train)):  # Start from 50 to ensure at least two classes
+        rf = RandomForestClassifier()
+        rf.fit(X_train[:i], y_train[:i])
+        probabilities = rf.predict_proba(X_test)
 
-    # Calculate the squared errors for different numbers of training samples
-    squared_errors = []
-    for i in range(1, len(X_train)):
-        svm = SupportVectorMachine()
-        svm.fit(X_train[:i], y_train[:i])
-        probabilities = svm.predict_proba(X_test)
+        # Skip this iteration if the model predicts only one class
         if probabilities.shape[1] == 1:
             continue
+
         prob_positive = probabilities[:, 1]
-        squared_error = np.mean((prob_positive - y_test) ** 2)
-        squared_errors.append(squared_error)
+        squared_error = np.mean((prob_positive - y_test/100) ** 2)
+        squared_errors_rf.append(squared_error)
 
     # Plot the histograms and the cumulative distribution
     plt.subplot(1,3,1)
@@ -36,9 +33,17 @@
     plt.tight_layout()
     plt.show()
 
+    plt.plot(squared_errors_nb)
+
     # Plot the squared errors
-    plt.plot(squared_errors)
+    plt.plot(squared_errors_svm)
+
+    plt.plot(squared_errors_rf)
     plt.title('Squared error by number of training samples')
     plt.xlabel('Number of training samples')
     plt.ylabel('Squared error')
+    plt.plot(squared_errors_nb, label='Naive Bayes')
+    plt.plot(squared_errors_svm, label='SVM')
+    plt.plot(squared_errors_rf, label='Random Forest')
+    plt.legend()  
     plt.show()

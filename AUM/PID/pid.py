@@ -1,20 +1,3 @@
-"""
-NIEISTOTNE NIE PATRZEC NAWET NARAZIE
-class Neuron:
-    def __init__(self, weights, bias):
-        self.weights = weights
-        self.bias = bias
-
-    def feedforward(self, inputs):
-        total = 0
-        for (weight, input) in zip(self.weights, inputs):
-            total += weight * input
-        return self.sigmoid(total + self.bias)
-
-    def sigmoid(self, x):
-        return 1 / (1 + pow(2.71828, -x))
-"""
-
 class PIDController:
     def __init__(self, Kp, Ki, Kd):
         # Inicjalizacja wspolczynnikow regulatora PID po raz pierwszy potem update w osobnej funkcji
@@ -36,14 +19,17 @@ class PIDController:
         self.Kd = Kd
         # self.prev_u = y #tylko jak controller cos zwroci 
 
-    def update_controller(self, current_error) -> float:
+    def update_controller(self, U_c, Y) -> float:
+        # Obliczenie aktulanego bledu regulacji
+        current_error = U_c - Y
         # Obliczenie sterowania na podstawie bledu regulacji
         u = self.prev_u + self.Kp * (current_error - self.prev_error) + self.Ki * current_error + self.Kd * (current_error - 2 * self.prev_error + self.prev_prev_error)
 
         # Update bledow regulacji
         self.prev_prev_error = self.prev_error
         self.prev_error = current_error
-        self.prev_u = u 
+        self.prev_u = u
+
         return u
 
 #///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -66,11 +52,8 @@ if __name__ == "__main__":
 
     # Petla symulujaca dzialanie regulatora PID
     for _ in range(iterations):
-        # Obliczenie bledu regulacji
-        error = desired_temp - actual_temp
-
         # Obliczenie sterowania
-        u = pid.update_controller(error)
+        u = pid.update_controller(desired_temp, actual_temp)
         outputs.append(u)
 
         # Symulacja zmiany temperatury

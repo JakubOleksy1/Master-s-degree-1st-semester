@@ -29,7 +29,7 @@ class TwoTankProcess:
         self.h2 = 0
         self.prev_Vin = 0
 
-    def process_run(self, V_in, delta_T) -> float:
+    def process_run(self, V_in, delta_T):
         """
         Run one iteration of model simulation.
 
@@ -42,17 +42,19 @@ class TwoTankProcess:
 
         """
         Q1 = (self.c * V_in) / 100
-        Q2 = self.K2 * math.sqrt(self.h2)
-        Q12 = self.K1 * math.sqrt(self.h1 - self.h2)
-        h1_new = ((Q1 -Q2) / self.A1) * delta_T + self.h1
-        h2_new = ((Q12 - Q2) / self.A2) * delta_T + self.h2
+        Q2 = self.K2 * math.sqrt(self.h2) if self.h2 > 0 else 0
+        Q12 = self.K1 * math.sqrt(max(self.h1 - self.h2, 0))
+        
+        h1_new = self.h1 + ((Q1 - Q12) / self.A1) * delta_T
+        h2_new = self.h2 + ((Q12 - Q2) / self.A2) * delta_T
+        
         self.h1 = h1_new
         self.h2 = h2_new
         self.prev_Vin = V_in
-
+        
         return self.h2
 
-    def get_dY_dU(self, delta_T, dU) -> float:
+    def get_dY_dU(self, delta_T, dU):
         """
         Calculates dY/dU derivative for system.
 
@@ -64,31 +66,39 @@ class TwoTankProcess:
             h2: dY/dU derivative at given moment
 
         """
-        # first iteration for moment n
-        Q1 = self.prev_Vin + (self.c * dU) / 100
-        Q2 = self.K2 * math.sqrt(self.h2)
-        Q12 = self.K1 * math.sqrt(self.h1 - self.h2)
-        h1_1 = ((Q1 -Q2) / self.A1) * delta_T + self.h1
-        h2_1 = ((Q12 - Q2) / self.A2) * delta_T + self.h2
-
-        # second iteration for moment n+1
-        Q2 = self.K2 * math.sqrt(h2_1)
-        Q12 = self.K1 * math.sqrt(h1_1 - h2_1)
-        h2_2 = ((Q12 - Q2) / self.A2) * delta_T + h2_1
+        # Current state
+        V_in = self.prev_Vin
+        Q1 = (self.c * V_in) / 100
+        Q2 = self.K2 * math.sqrt(self.h2) if self.h2 > 0 else 0
+        Q12 = self.K1 * math.sqrt(max(self.h1 - self.h2, 0))
+        h1_1 = self.h1 + ((Q1 - Q12) / self.A1) * delta_T
+        h2_1 = self.h2 + ((Q12 - Q2) / self.A2) * delta_T
         
-        #return dY(n+1)/dU(n)
+        # Perturbed state
+        V_in += dU
+        Q1 = (self.c * V_in) / 100
+        Q2 = self.K2 * math.sqrt(h2_1) if h2_1 > 0 else 0
+        Q12 = self.K1 * math.sqrt(max(h1_1 - h2_1, 0))
+        h1_2 = h1_1 + ((Q1 - Q12) / self.A1) * delta_T
+        h2_2 = h2_1 + ((Q12 - Q2) / self.A2) * delta_T
+        
         return (h2_2 - h2_1) / dU
-    
 
+# Simulation setup
 tanks_sys = TwoTankProcess()
 time = list(range(5000))
-system_out = list()
-dYdU = list()
+system_out = []
+dYdU = []
 
-for y in time:
+for t in time:
     system_out.append(tanks_sys.process_run(100, 1))
-    dYdU.append(tanks_sys.get_dY_dU(1, 0.01))
+    dYdU.append(tanks_sys.get_dY_dU(1, 0.003))
 
-plt.plot(time, system_out)
-plt.plot(time, dYdU)
+# Plotting the results
+plt.plot(time, system_out, label="h2(t)")
+plt.plot(time, dYdU, label="dY/dU")
+plt.xlabel('Time [s]')
+plt.ylabel('Height / dY/dU')
+plt.legend()
+plt.title('Two Tank Process Simulation')
 plt.show()

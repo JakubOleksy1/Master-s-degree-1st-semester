@@ -209,18 +209,16 @@ if __name__ == "__main__":                                      # Głowna funkcj
     plt.show()
 
     plt.plot(squared_errors_nb)
-    plt.title('Squared error by number of training samples')
-    plt.xlabel('Number of training samples')
-    plt.ylabel('Squared error')
 
     # Plot the squared errors
     plt.plot(squared_errors_svm)
-    plt.title('Squared error by number of training samples')
-    plt.xlabel('Number of training samples')
-    plt.ylabel('Squared error')
 
     plt.plot(squared_errors_rf)
     plt.title('Squared error by number of training samples')
     plt.xlabel('Number of training samples')
     plt.ylabel('Squared error')
+    plt.plot(squared_errors_nb, label='Naive Bayes')
+    plt.plot(squared_errors_svm, label='SVM')
+    plt.plot(squared_errors_rf, label='Random Forest')
+    plt.legend()  
     plt.show()
