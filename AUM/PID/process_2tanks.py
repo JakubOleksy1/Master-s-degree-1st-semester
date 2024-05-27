@@ -47,6 +47,9 @@ class TwoTankProcess:
         
         h1_new = self.h1 + ((Q1 - Q12) / self.A1) * delta_T
         h2_new = self.h2 + ((Q12 - Q2) / self.A2) * delta_T
+
+        if h1_new < 0: h1_new = 0
+        if h2_new < 0: h2_new = 0
         
         self.h1 = h1_new
         self.h2 = h2_new
@@ -84,21 +87,24 @@ class TwoTankProcess:
         
         return (h2_2 - h2_1) / dU
 
-# Simulation setup
-tanks_sys = TwoTankProcess()
-time = list(range(5000))
-system_out = []
-dYdU = []
+if __name__ == "__main__":
+    # Simulation setup
+    tanks_sys = TwoTankProcess()
+    time = list(range(30000))
+    system_out = []
+    dYdU = []
 
-for t in time:
-    system_out.append(tanks_sys.process_run(100, 1))
-    dYdU.append(tanks_sys.get_dY_dU(1, 0.003))
+    timeStep = 0.1
+    input = 100
+    for t in time:
+        system_out.append(tanks_sys.process_run(input, timeStep))
+        dYdU.append(tanks_sys.get_dY_dU(timeStep, (0.003*timeStep)/(input/100)))
 
-# Plotting the results
-plt.plot(time, system_out, label="h2(t)")
-plt.plot(time, dYdU, label="dY/dU")
-plt.xlabel('Time [s]')
-plt.ylabel('Height / dY/dU')
-plt.legend()
-plt.title('Two Tank Process Simulation')
-plt.show()
+    # Plotting the results
+    plt.plot(time, system_out, label="h2(t)")
+    plt.plot(time, dYdU, label="dY/dU")
+    plt.xlabel('Time [s]')
+    plt.ylabel('Height / dY/dU')
+    plt.legend()
+    plt.title('Two Tank Process Simulation')
+    plt.show()

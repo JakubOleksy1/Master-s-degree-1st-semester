@@ -1,3 +1,114 @@
+class Machine {
+    public void start() {
+        System.out.println("Machine started.");
+    }
+}
+
+class Camera extends Machine {
+    public void start() {
+        System.out.println("Camera started.");
+    }
+
+    public void snap() {
+        System.out.println("Photo taken.");
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        Machine machine1 = new Machine();
+        Camera camera1 = new Camera();
+
+        machine1.start();
+        camera1.start();
+        camera1.snap();
+
+        // Upcasting
+        Machine machine2 = camera1;
+        machine2.start();
+        // machine2.snap(); // Won't work
+
+        // Downcasting
+        Machine machine3 = new Camera();
+        Camera camera2 = (Camera)machine3;
+        camera2.start();
+        camera2.snap();
+
+        // Doesn't work --- runtime error
+        //Machine machine4 = new Machine();
+        // Camera camera3 = (Camera)machine4;
+        // camera3.start();
+        // camera3.snap();
+    }
+}
+
+/* TUTORIAL 31 
+public class App {
+    public static void main(String[] args) {
+        byte byteValue = 20;
+        //short shortValue = 55;
+        int intValue = 888;
+        long longValue = 23355;
+
+        float floatValue = 8834.8f;
+        //float floatValue2 = (float)99.3;
+        double doubleValue = 32.4;
+
+        System.out.println(Byte.MAX_VALUE);
+        System.out.println(Short.MAX_VALUE);
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println(Long.MAX_VALUE);
+        System.out.println(Float.MAX_VALUE);
+        System.out.println(Double.MAX_VALUE);
+
+        intValue = (int)longValue;
+        System.out.println(intValue);
+
+        doubleValue = intValue;
+        System.out.println(doubleValue);
+
+        intValue = (int)floatValue;
+        System.out.println(intValue);
+
+        // The following won't work as we expect it to
+        // 128 is too big for a byte
+        byteValue = (byte)128;
+        System.out.println(byteValue);
+    }
+}*/
+
+/* TUTORIAL 30
+class Plant {
+    public static final int ID = 7;
+    private String name;
+
+    public String getData() {
+        String data = "some stuff" + calculateGrowthForecast();
+        return data;
+    }
+
+    private int calculateGrowthForecast() {
+        return 9;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+}
+
+public class App {
+    public static void main(String[] args) {
+        Plant plant = new Plant();
+        System.out.println(plant.ID);
+        System.out.println(plant.getData());
+    }
+}*/
+
+/*SKIPPED TUTORIAL 28 AND 29 BECAUSE THERE WAS NO CODE */
 /* TUTORIAL 27 
 import ocean.Fish;
 import ocean.plants.Algae;

@@ -12,12 +12,11 @@ class PIDController:
         # inicjalizacja poprzedniego sterowania
         self.prev_u = 0.0
 
-    def update_coefficients(self, Kp, Ki, Kd, y):
+    def update_coefficients(self, Kp, Ki, Kd):
         # Update stalych Kp Ki Kd
         self.Kp = Kp
         self.Ki = Ki
         self.Kd = Kd
-        # self.prev_u = y #tylko jak controller cos zwroci 
 
     def update_controller(self, U_c, Y) -> float:
         # Obliczenie aktulanego bledu regulacji

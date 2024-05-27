@@ -1,6 +1,7 @@
 import random
 import math
 import matplotlib.pyplot as plt
+from ortools.sat.python import cp_model
 import os
 
 os.chdir("C:/Users/jakub/Visual Studio Code/AO")
@@ -24,7 +25,7 @@ def calculate_makespan(sequence, tasks):
         end_time = max(end_time, time + q) 
     return end_time
 
-def generujsasiada(sequence, T, N):
+def generujsasiada(sequence, N):
     i = random.randint(0, N-1)
     j = random.randint(0, N-1)
     while i == j:
@@ -34,20 +35,18 @@ def generujsasiada(sequence, T, N):
 
 def symulowane_wyzarzanie_rpq(tasks, temperatura_poczatkowa, wspolczynnik_chlodzenia, liczba_prob, max_epoki):
     N = len(tasks)
-    # Wylosuj rozwiązanie początkowe (sekwencję zadań)
     X = list(range(N))
     random.shuffle(X)
     T = temperatura_poczatkowa
     najlepsze_rozwiazanie = X[:]
     najlepszy_makespan = calculate_makespan(najlepsze_rozwiazanie, tasks)
 
-    temperatures = []  # Lista do przechowywania temperatur
-    makespans = []  # Lista do przechowywania wartości makespan
-
+    temperatures = [] 
+    makespans = []  
 
     for epoka in range(max_epoki):
         for _ in range(liczba_prob):
-            X_prim = generujsasiada(X[:], T, N)
+            X_prim = generujsasiada(X[:], N)
             delta_f = calculate_makespan(X_prim, tasks) - calculate_makespan(X, tasks)
 
             if delta_f < 0:
@@ -67,17 +66,45 @@ def symulowane_wyzarzanie_rpq(tasks, temperatura_poczatkowa, wspolczynnik_chlodz
 
     return najlepsze_rozwiazanie, najlepszy_makespan, temperatures, makespans
 
-#Parametry algorytmu
-temperatura_poczatkowa = 1000
+def solve_rqp(tasks):
+    model = cp_model.CpModel()
+    
+    # Zmienne: punkty startowe dla każdego zadania
+    starts = [model.NewIntVar(0, sum(task[1] for task in tasks), f'start_{i}') for i in range(len(tasks))]
+    # Zmienne pomocnicze: czasy zakończenia każdego zadania
+    ends = [model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), f'end_{i}') for i in range(len(tasks))]
+    
+    # Czas zakończenia wszystkich zadań
+    makespan = model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), 'makespan')
+    
+    # Dodanie ograniczeń związanych z r, p, q dla każdego zadania
+    for i, (r, p, q) in enumerate(tasks):
+        model.Add(starts[i] >= r)  # Nie można zacząć przed 'r'
+        model.Add(ends[i] == starts[i] + p)  # Czas zakończenia to czas startu plus czas przetwarzania
+        model.Add(ends[i] + q <= makespan)  # 'q' jest deadlinem od zakończenia zadania do maksymalnego makespanu
+    
+    # Minimalizacja makespanu
+    model.Minimize(makespan)
+    
+    # Rozwiązanie problemu
+    solver = cp_model.CpSolver()
+    status = solver.Solve(model)
+    
+    if status == cp_model.OPTIMAL:
+        print(f'Optimal Makespan: {solver.Value(makespan)}')
+    else:
+        print("Nie znaleziono rozwiązania!")
+
+temperatura_poczatkowa = 10000
 wspolczynnik_chlodzenia = 0.95
-liczba_prob = 1
+liczba_prob = 5
 max_epoki = 10000
 
-#Uruchomienie algorytmu
-filepath = "rpq_500.txt"  # Zmień na aktualną ścieżkę do pliku
+filepath = "rpq_500.txt"
 tasks = read_rpq_data(filepath)
 
 najlepsze_rozwiazanie, najlepszy_makespan, temperatures, makespans = symulowane_wyzarzanie_rpq(tasks, temperatura_poczatkowa, wspolczynnik_chlodzenia, liczba_prob, max_epoki)
+
 print("Najlepsze rozwiązanie:", najlepsze_rozwiazanie)
 print("Najlepszy makespan:", najlepszy_makespan)
 
@@ -86,49 +113,12 @@ if set(najlepsze_rozwiazanie) == set(range(len(tasks))): # Sprawdzenie czy wszys
 else:
     print("Niektorych zadan brakuje")
 
-print("Najlepsza sekwencja:", najlepsze_rozwiazanie)
-print("Makespan:", najlepszy_makespan)
+solve_rqp(tasks)
 
 # Rysowanie wykresu
 epoki = range(max_epoki)
 plt.plot(epoki, makespans)
 plt.xlabel('Epoki')
-plt.ylabel('Makespan')
+plt.ylabel('Cmax')
 plt.title('Wykres zmian makespan w zależności od temperatury')
 plt.show()
-#sprawko opis teoretyczny funckje opisac co robia i wykresy 
-#str encyklopedia algorytmow
-
-from ortools.sat.python import cp_model
-
-def solve_rqp(tasks):
-    model = cp_model.CpModel()
-
-#Zmienne: punkty startowe dla każdego zadania
-    starts = [model.NewIntVar(0, sum(task[1] for task in tasks), f'start{i}') for i in range(len(tasks))]
-    # Zmienne pomocnicze: czasy zakończenia każdego zadania
-    ends = [model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), f'end_{i}') for i in range(len(tasks))]
-
-#Czas zakończenia wszystkich zadań
-    makespan = model.NewIntVar(0, sum(task[1] for task in tasks) + max(task[2] for task in tasks), 'makespan')
-
-#Dodanie ograniczeń związanych z r, p, q dla każdego zadania
-    for i, (r, p, q) in enumerate(tasks):
-        model.Add(starts[i] >= r)  # Nie można zacząć przed 'r'
-        model.Add(ends[i] == starts[i] + p)  # Czas zakończenia to czas startu plus czas przetwarzania
-        model.Add(ends[i] + q <= makespan)  # 'q' jest deadlinem od zakończenia zadania do maksymalnego makespanu
-
-#Minimalizacja makespanu
-    model.Minimize(makespan)
-
-#Rozwiązanie problemu
-    solver = cp_model.CpSolver()
-    status = solver.Solve(model)
-
-    if status == cp_model.OPTIMAL:
-        print(f'Optimal Makespan: {solver.Value(makespan)}')
-        for i in range(len(tasks)):
-            print(f'Task {i}: Start at {solver.Value(starts[i])}, End by {solver.Value(ends[i])}')
-    else:
-        print("Nie znaleziono rozwiązania!")
-solve_rqp(tasks)

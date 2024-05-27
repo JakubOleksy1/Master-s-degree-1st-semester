@@ -1,0 +1,26 @@
+# Deployment to strukturka, która zajmuje się ReplicaSetsami, ReplikaSets z kolei mają podsy i dbają, że jeśli jakiś się usunie to stworzą go od nowa.
+# Z kolei Deployment potrafi po kolei zmieniać wersje podsów
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:                 # informacje deploymentu:
+  name: sample-deployment
+  labels:
+    app: echo
+spec:                     # specyfikacja, czym deployment się "opiekuje":
+  replicas: 3             # 3 replicaSers w deploymencie
+  selector:
+    matchLabels:
+      app: echo           # podaj etykiety, które mają twoje pody
+  template:               # pody muszą spełniać szablon:
+    metadata:
+      labels:
+        app: echo
+    spec:
+      containers:
+        - name: echo
+          image: mendhak/http-https-echo
+          ports:
+            - containerPort: 8080 # port na jakim nasłuchuje kontener wewnątrz
+              name: echo-port
+              """
