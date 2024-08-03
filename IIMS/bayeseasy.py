@@ -10,6 +10,7 @@ from sklearn.metrics import mean_absolute_error, r2_score
 from sklearn.svm import SVC
 
 def discretize_prediction(prediction):
+    prediction = prediction*25 
     possible_values = [0, 25, 50, 75, 100]
     return min(possible_values, key=lambda x: abs(x - prediction))
 
@@ -101,10 +102,10 @@ class NaiveBayes:
             self._var[idx, :] = X_c.var(axis=0)
             self._priors[idx] = X_c.shape[0] / float(n_samples)
 
-    def predict_proba(self, X):
+    def predict_proba(self, X) -> float:
         return np.array([self._predict_proba(x) for x in X])
 
-    def _predict_proba(self, x):
+    def _predict_proba(self, x) -> float:
         posteriors = []
 
         for idx in range(len(self._classes)):
@@ -116,14 +117,14 @@ class NaiveBayes:
         posteriors = np.exp(posteriors)
         return posteriors / sum(posteriors)
 
-    def _pdf(self, class_idx, x):
+    def _pdf(self, class_idx, x) -> float:
         mean = self._mean[class_idx]
         var = self._var[class_idx] + 1e-9
         numerator = np.exp(-((x - mean) ** 2) / (2 * var))
         denominator = np.sqrt(2 * np.pi * var)
         return (numerator / denominator) + 1e-9
 
-    def predict(self, X):
+    def predict(self, X) -> float:
         proba = self.predict_proba(X)
         return np.argmax(proba, axis=1)
 
@@ -142,7 +143,7 @@ if __name__ == "__main__":
 
     max_value_df = df['num'].max()
     print("Max value of probability", max_value_df)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=100)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=100)
 
     nb = NaiveBayes()
     nb.fit(X_train, y_train)
@@ -196,11 +197,11 @@ if __name__ == "__main__":
     plt.ylabel('Mean Absolute Error')
     plt.show()
 
-    # Discretize predictions
+    """# Discretize predictions
     discretized_nb_predictions = np.array([discretize_prediction(pred) for pred in nb.predict(X_test)])
     discretized_svm_predictions = np.array([discretize_prediction(pred) for pred in svm.predict(X_test)])
     discretized_rf_predictions = np.array([discretize_prediction(pred) for pred in rf.predict(X_test)])
-
+    """
     discretized_nb_squared = []
     discretized_svm_squared =  []
     discretized_rf_squared =  []
@@ -210,6 +211,17 @@ if __name__ == "__main__":
     discretized_rf_r2 =  []
 
     for i in range(errVar, len(X_train)):
+
+        # Update the models with increasing number of samples
+
+        nb.fit(X_train[:i], y_train[:i])
+        svm.fit(X_train[:i], y_train[:i])
+        rf.fit(X_train[:i], y_train[:i])
+        
+        # Get predictions for the updated models
+        discretized_nb_predictions = np.array([discretize_prediction(pred) for pred in nb.predict(X_test)]) # 0 0 0 0
+        discretized_svm_predictions = np.array([discretize_prediction(pred) for pred in svm.predict(X_test)]) # 0 0 0 0
+        discretized_rf_predictions = np.array([discretize_prediction(pred) for pred in rf.predict(X_test)]) # 25 25 25 25 
 
         discretized_nb_squared_errors = np.mean((discretized_nb_predictions - y_test) ** 2)
         discretized_svm_squared_errors = np.mean((discretized_svm_predictions - y_test) ** 2)
